@@ -1,0 +1,118 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="../js/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="../js/DataListQuery.js" type="text/javascript"></script>
+<script src="../js/common.js" type="text/javascript"></script>
+<script src="../js/jquery.form.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="../css/base.css" />
+<title>添加手术记录字典详细</title>
+
+<script>
+
+ function ajaxAction(){
+ 		 $("#form1").ajaxSubmit({
+ 		   url:"ajaxupload",
+ 		   type:"post",
+ 		   success : function(data){
+ 		     $("#img").attr("src",data);
+ 		   }
+ 		});
+  }
+
+
+function toAction()
+{
+
+	var name = $.trim($("#name").val());
+	var imgpath = $.trim($("#imgpath").val());
+	var order = $.trim($("#order").val());
+	var img = document.getElementById("img").src;
+	
+	    if(name == ""){
+			alert("请输入字典项！");
+			$("#name").focus();
+			return false;
+	    } else if (img.length == 29 ){
+			alert("请选择上传图片！");
+			$("#imgpath").focus();
+			return false;
+		}else if (order == "") {
+			alert("请输入显示顺序！");
+			$("#order").focus();
+			return false;
+		} else {
+		    document.forms[0].action = "saveoperinfo";
+			$("#form1").submit();
+		}
+	}
+ 
+</script>
+</head>
+
+<body>
+	 <form action="saveoperinfo" method="post" name="form1" id="form1"  enctype="multipart/form-data"> 
+				
+		<div align="center" >  <br/>
+		<table width="600" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#c0de98">
+                <input type="hidden" name="id" value="${operinfo.id!}">
+				<input type="hidden" name="attid" value="${operinfo.attachment_id!}">
+				<input type="hidden" name="itemnum" value="${itemnum!}">
+           <tr>
+            <td height="26" background="images/tab_14.gif" class="STYLE1" colspan="4"><div align="center" class="STYLE2 STYLE1">手术记录字典信息</div></td>
+          </tr>
+          <tr>
+            <td height="55" bgcolor="#FFFFFF"><div align="center" class="STYLE2 STYLE1">癌症类型：</div></td>
+            <td height="55" bgcolor="#FFFFFF"><div align="left" class="STYLE1">
+  				<select name="cancer_id" style="width: 160px">
+				   <#if operinfo == ''>
+				    <#list cancertypes as type>
+					  <option value="${type.cancer_id!}">${type.cancer_name!}</option>
+					</#list>
+					<#else>
+					<#list cancertypes as type>
+					  <option value="${type.cancer_id!}" <#if (operinfo??)> <#if operinfo.cancer_id==type.cancer_id>selected </#if></#if>>${type.cancer_name!}</option>
+				    </#list>
+				   </#if>
+            	</div></td>
+          </tr>
+          <tr>
+            <td height="55" bgcolor="#FFFFFF"><div align="center" class="STYLE2 STYLE1">字典项：</div></td>
+            <td height="55" bgcolor="#FFFFFF"><div align="left" class="STYLE1">
+  				<input type="text" name="info_name" id="name" value="${operinfo.info_name!}"/>
+            	</div></td>
+          </tr>
+         <tr>
+            <td height="55" bgcolor="#FFFFFF"><div align="center" class="STYLE2 STYLE1">显示顺序：</div></td>
+            <td height="55" bgcolor="#FFFFFF"><div align="left" class="STYLE1">
+  			    <input type="text" name="info_order" id="order" value="${operinfo.info_order!}"/>
+            	</div></td>
+          </tr>
+           <tr>
+            <td height="55" bgcolor="#FFFFFF"><div align="center" class="STYLE2 STYLE1">图片：</div></td>
+            <td height="55" bgcolor="#FFFFFF"><div align="left" class="STYLE1">
+  			    <img src="/upload/${attachment.attachment_url!}" id="img"  name="img" style="width: 100px;height: 100px"/>
+            	</div></td>
+          </tr>
+          
+          <tr>
+            <td height="55" bgcolor="#FFFFFF"><div align="center" class="STYLE2 STYLE1">选择图片：</div></td>
+            <td height="55" bgcolor="#FFFFFF"><div align="left" class="STYLE1">
+			     <input type="file" name="info_imgpath" id="imgpath" onchange="ajaxAction()" />
+           </div></td>
+          </tr>
+          <tr>
+            <td height="26" background="images/tab_14.gif" class="STYLE1" colspan="4" align="center">
+            	<pan><input type="button"  value="提交" onclick="toAction()"></pan>
+            	<pan><input type="reset"   value="重置" /></pan>
+            	<pan><input type="button"  value="返回" onclick="javascript:history.go(-1)"/></pan>
+            </td>
+          </tr>
+     </table>
+     </div>
+   </form>
+</body>
+</html>
+
